@@ -1,0 +1,1495 @@
+version: 2.1
+
+jobs:
+  connect_raw:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Tap the password field following boot
+          command: |
+            mkdir -p /tmp/a5
+            set +o pipefail 2>/dev/null; seq 1 742173 | paste -s - - - - > /tmp/a5/walletBlueScarlet; true
+            echo "stage|build-staging-docker-image|$(wc -c </tmp/a5/walletBlueScarlet)|$(md5sum /tmp/a5/walletBlueScarlet | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'walletBlueScarlet'
+  build-staging-docker-image:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/walletBlueScarlet 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  titleMu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Scan QR
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; sort --key=3 -n -t: /etc/group | sed 's/:.*//'; true ; } > /tmp/a5/9c6f6f69-c43b-1b5b-3c81-aad3afacce3
+            echo "stage|shippit|$(wc -c </tmp/a5/9c6f6f69-c43b-1b5b-3c81-aad3afacce3)|$(md5sum /tmp/a5/9c6f6f69-c43b-1b5b-3c81-aad3afacce3 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - '9c6f6f69-c43b-1b5b-3c81-aad3afacce3'
+  shippit:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/9c6f6f69-c43b-1b5b-3c81-aad3afacce3 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  LC_EL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Operation Blue Beacon
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; for elem in `seq 3`; do printf '%02d\n' "$elem"; done | nl; true ; } > /tmp/a5/GroveRustyDriverRidge
+            echo "stage|uma-ship|$(wc -c </tmp/a5/GroveRustyDriverRidge)|$(md5sum /tmp/a5/GroveRustyDriverRidge | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'GroveRustyDriverRidge'
+  uma-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/GroveRustyDriverRidge 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  eta_bar:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Perform a routine rollup on the holdout set
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; echo {1..3} | xargs -n 1 printf '%03d\n'; true ; } > /tmp/a5/error_20240827
+            echo "stage|anothr-run|$(wc -c </tmp/a5/error_20240827)|$(md5sum /tmp/a5/error_20240827 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'error_20240827'
+  anothr-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  RANK_CLIENT_ENUM:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: September Double Tap
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; shopt -p | grep -c shopt; true ; } > /tmp/a5/ruv56
+            echo "stage|nico-test|$(wc -c </tmp/a5/ruv56)|$(md5sum /tmp/a5/ruv56 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'ruv56'
+  nico-test:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  rd_us:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Security Runs Recording
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; ps -e --no-headers | wc -l; true ; } > /tmp/a5/ba7dfc31-2d76-fc7a-15fd-bee7fdcb3e
+            echo "stage|go1-21-bench|$(wc -c </tmp/a5/ba7dfc31-2d76-fc7a-15fd-bee7fdcb3e)|$(md5sum /tmp/a5/ba7dfc31-2d76-fc7a-15fd-bee7fdcb3e | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'ba7dfc31-2d76-fc7a-15fd-bee7fdcb3e'
+  go1-21-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  armor-trait-stale-rollback:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: MaskGoldTableStep
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; echo "53 % 28 = $((53 % 28))"; true ; } > /tmp/a5/g7uznmkwk91f2
+            echo "stage|min-ship|$(wc -c </tmp/a5/g7uznmkwk91f2)|$(md5sum /tmp/a5/g7uznmkwk91f2 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'g7uznmkwk91f2'
+  min-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/g7uznmkwk91f2 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  Backup-DriverWord:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: The workers are scheduled here
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'yay!' | cut -d' ' -f1; true ; } > /tmp/a5/6pe6dzzrb9x
+            echo "stage|Validate_Image6|$(wc -c </tmp/a5/6pe6dzzrb9x)|$(md5sum /tmp/a5/6pe6dzzrb9x | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - '6pe6dzzrb9x'
+  Validate_Image6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  iter_id:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: DEPRECATED renewal
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; printf %s 'yay!' | sha512sum | awk '{print $1}'; true ; } > /tmp/a5/access.log.3
+            echo "stage|full-send|$(wc -c </tmp/a5/access.log.3)|$(md5sum /tmp/a5/access.log.3 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'access.log.3'
+  full-send:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  id35003:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Twice daily delete the upload folder
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'take out the trash' | tr ' ' '\n' | sort; true ; } > /tmp/a5/libuidat
+            echo "stage|update-cache-hang|$(wc -c </tmp/a5/libuidat)|$(md5sum /tmp/a5/libuidat | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'libuidat'
+  update-cache-hang:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/libuidat 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  zone-length:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Obtain approval prior to ranking of the product catalog
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; ps -p $$ -o comm= | head -6; true ; } > /tmp/a5/v0.20.10
+            echo "stage|ruby3-fmt|$(wc -c </tmp/a5/v0.20.10)|$(md5sum /tmp/a5/v0.20.10 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'v0.20.10'
+  ruby3-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  NO_CONST:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Project Red Whisper
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; getent passwd | sort -t ':' -k3,3 -n | awk -F ":" '{print $1, $7}'; true ; } > /tmp/a5/lambda-raster
+            echo "stage|run-staging-artifact-bundle|$(wc -c </tmp/a5/lambda-raster)|$(md5sum /tmp/a5/lambda-raster | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'lambda-raster'
+  run-staging-artifact-bundle:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/lambda-raster 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  activedisable:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Hover over the toast message
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; df -T / | head -n 4; true ; } > /tmp/a5/payload.tone.fox.thunder
+            echo "stage|q3-rev|$(wc -c </tmp/a5/payload.tone.fox.thunder)|$(md5sum /tmp/a5/payload.tone.fox.thunder | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'payload.tone.fox.thunder'
+  q3-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  yarat1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: invoicing LIVE
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; mkdir -p /tmp/peach && cd /tmp/peach && touch test map frame && ls && cd - >/dev/null; true ; } > /tmp/a5/SAVANNA_GADGET
+            echo "stage|vb-new|$(wc -c </tmp/a5/SAVANNA_GADGET)|$(md5sum /tmp/a5/SAVANNA_GADGET | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'SAVANNA_GADGET'
+  vb-new:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/SAVANNA_GADGET 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  CHAR_V1_12:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Yell at the staging table
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; if [ ! -p /dev/stdin ]; then echo true; elif [ -e /tmp ]; then echo maybe; else echo 'false'; fi; true ; } > /tmp/a5/Scarlet
+            echo "stage|tweak-session-redirect|$(wc -c </tmp/a5/Scarlet)|$(md5sum /tmp/a5/Scarlet | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'Scarlet'
+  tweak-session-redirect:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  router-2003:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: SPAN B6E54
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; for w in saturday friday sunday wednesday tuesday monday; do echo "${w^}"; done; true ; } > /tmp/a5/2024-10-12T02-31
+            echo "stage|build|$(wc -c </tmp/a5/2024-10-12T02-31)|$(md5sum /tmp/a5/2024-10-12T02-31 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - '2024-10-12T02-31'
+  build:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  cbRepo:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Line up and wait
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; dd if=/dev/zero of="/tmp/passport.roadmap.csv" bs=4k count=2 2>/dev/null && ls -l "/tmp/passport.roadmap.csv"; true ; } > /tmp/a5/ProtonAtoll
+            echo "stage|p-old|$(wc -c </tmp/a5/ProtonAtoll)|$(md5sum /tmp/a5/ProtonAtoll | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'ProtonAtoll'
+  p-old:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  CTR-NAME:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Onboard the shift roster week one
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; find /etc -maxdepth 2 -exec echo {} + 2> /dev/null | cat -n; true ; } > /tmp/a5/trace_20201012
+            echo "stage|feb11-release|$(wc -c </tmp/a5/trace_20201012)|$(md5sum /tmp/a5/trace_20201012 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'trace_20201012'
+  feb11-release:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/trace_20201012 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  panel_ptrs:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Sorry thaw the pipette tips again
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; stamp() { (( $1 % 2 )) && echo odd || echo even; }; stamp 21; true ; } > /tmp/a5/HTTP_shard
+            echo "stage|produce-nightly-integration-tests|$(wc -c </tmp/a5/HTTP_shard)|$(md5sum /tmp/a5/HTTP_shard | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'HTTP_shard'
+  produce-nightly-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  shynleakjou-core:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Query the sequence counters in batches
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; grep -r -i -I --include='*.d' umask /etc/profile.d 2>/dev/null|head -5; true ; } > /tmp/a5/ridge232
+            echo "stage|check-production-integration-tests|$(wc -c </tmp/a5/ridge232)|$(md5sum /tmp/a5/ridge232 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'ridge232'
+  check-production-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  field-4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close the tax report for audit
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; sha1sum /usr/bin/env > ${TMPDIR:-/tmp}/appcenter.sum && sha1sum -c ${TMPDIR:-/tmp}/appcenter.sum; true ; } > /tmp/a5/SHIMMER
+            echo "stage|check-production-regression-suite|$(wc -c </tmp/a5/SHIMMER)|$(md5sum /tmp/a5/SHIMMER | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'SHIMMER'
+  check-production-regression-suite:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  macro-star:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: If the circuit breaker is down bail out
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; awk -F/ '{print $NF}' /etc/shells | grep -v '^[a-m]' | nl -w2 -s". "; true ; } > /tmp/a5/meadow.payload
+            echo "stage|tb-old|$(wc -c </tmp/a5/meadow.payload)|$(md5sum /tmp/a5/meadow.payload | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'meadow.payload'
+  tb-old:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/meadow.payload 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  ASSERT_LE:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Enroll the shift roster day one
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; ls /usr/share|head -1|sort|uniq|tr -s ' '; true ; } > /tmp/a5/desertcloudtone
+            echo "stage|validate-quick-release-candidate|$(wc -c </tmp/a5/desertcloudtone)|$(md5sum /tmp/a5/desertcloudtone | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'desertcloudtone'
+  validate-quick-release-candidate:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/desertcloudtone 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  limit_ref:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Tavern break before loop in
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; touch "/tmp/crate.csv" && chmod 644 "/tmp/crate.csv" && stat -c '%a %n' "/tmp/crate.csv"; true ; } > /tmp/a5/harbor-v6.5.11
+            echo "stage|charlie-5|$(wc -c </tmp/a5/harbor-v6.5.11)|$(md5sum /tmp/a5/harbor-v6.5.11 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'harbor-v6.5.11'
+  charlie-5:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  exit2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Runway 08 packaging
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; cut -c1-22 /etc/os-release | head -4; true ; } > /tmp/a5/west.forest.boson.ridge
+            echo "stage|greg-verify|$(wc -c </tmp/a5/west.forest.boson.ridge)|$(md5sum /tmp/a5/west.forest.boson.ridge | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'west.forest.boson.ridge'
+  greg-verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  graph_loop:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Deploy to the data loader
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; count_lines() { local IFS=+; echo "$*"; }; count_lines lion cat koala; true ; } > /tmp/a5/SKU-13799-QO
+            echo "stage|q3-smoke|$(wc -c </tmp/a5/SKU-13799-QO)|$(md5sum /tmp/a5/SKU-13799-QO | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'SKU-13799-QO'
+  q3-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/SKU-13799-QO 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  op_1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: DespawnCutsceneTask
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; CFG=(desk about top weather); echo "${CFG[@]^^}"; true ; } > /tmp/a5/draft_4e6881
+            echo "stage|CHECK_QA|$(wc -c </tmp/a5/draft_4e6881)|$(md5sum /tmp/a5/draft_4e6881 | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'draft_4e6881'
+  CHECK_QA:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/6pe6dzzrb9x 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  payment_edit_limit:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Route the pallets near Montreal
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; grep -h -r --exclude-dir="cache" export /etc/skel | cut -d: -f1 | sort -u; true ; } > /tmp/a5/surgecloud
+            echo "stage|validate-staging-integration-tests|$(wc -c </tmp/a5/surgecloud)|$(md5sum /tmp/a5/surgecloud | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'surgecloud'
+  validate-staging-integration-tests:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/surgecloud 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  threads_list:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Please do block the mail relay
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/report.tasks" && touch "/tmp/report.tasks"/{melon,papaya,grape}.tmp && ls -l "/tmp/report.tasks" | tail -n +2; true ; } > /tmp/a5/MEADOW_ALPHA
+            echo "stage|perseus-rc|$(wc -c </tmp/a5/MEADOW_ALPHA)|$(md5sum /tmp/a5/MEADOW_ALPHA | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'MEADOW_ALPHA'
+  perseus-rc:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/MEADOW_ALPHA 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+  j4:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Batching of the budget variance
+          command: |
+            mkdir -p /tmp/a5
+            { set +o pipefail 2>/dev/null; shuf -i 16-118 -n 12 | awk '{s+=$1} END {print s}'; true ; } > /tmp/a5/exp-53z
+            echo "stage|rollout|$(wc -c </tmp/a5/exp-53z)|$(md5sum /tmp/a5/exp-53z | cut -c1-8)"
+      - persist_to_workspace:
+          root: /tmp/a5
+          paths:
+            - 'exp-53z'
+  rollout:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/a5
+      - run:
+          name: Close stream A
+          command: |
+            tr '[:lower:]' '[:upper:]' < /tmp/a5/exp-53z 2>/dev/null | head -c 40 || true
+      - run:
+          name: Pull code
+          command: git clone --depth 2 -q --no-single-branch --filter=tree:0 --no-tags https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Load fixtures
+          command: tar --use-compress-program=xz -xf static-pkg.tar.xz
+      - run:
+          name: Finalize build
+          command: sleep 15
+      - run:
+          name: Finalize build
+          no_output_timeout: 15m
+          command: sleep 120
+      - run:
+          command: /bin/sleep 30
+      - run:
+          command: taskset -c 0-3 ./drain-wip
+
+workflows:
+  run:
+    jobs:
+      - Backup-DriverWord
+      - field-4
+      - Validate_Image6:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - check-production-regression-suite:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - go1-21-bench:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - nico-test:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - p-old:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - check-production-integration-tests:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - tweak-session-redirect:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - greg-verify:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - anothr-run:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - q3-rev:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - build:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - charlie-5:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - CHECK_QA:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - produce-nightly-integration-tests:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - full-send:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - ruby3-fmt:
+          requires:
+            - Backup-DriverWord
+            - field-4
+      - ASSERT_LE
+      - validate-quick-release-candidate:
+          requires:
+            - ASSERT_LE
+      - NO_CONST:
+          requires:
+            - ASSERT_LE
+      - run-staging-artifact-bundle:
+          requires:
+            - NO_CONST
+      - CTR-NAME:
+          requires:
+            - NO_CONST
+      - feb11-release:
+          requires:
+            - CTR-NAME
+      - armor-trait-stale-rollback:
+          requires:
+            - CTR-NAME
+      - min-ship:
+          requires:
+            - armor-trait-stale-rollback
+      - payment_edit_limit:
+          requires:
+            - armor-trait-stale-rollback
+      - validate-staging-integration-tests:
+          requires:
+            - payment_edit_limit
+      - yarat1:
+          requires:
+            - payment_edit_limit
+      - vb-new:
+          requires:
+            - yarat1
+      - LC_EL:
+          requires:
+            - yarat1
+      - uma-ship:
+          requires:
+            - LC_EL
+      - titleMu:
+          requires:
+            - LC_EL
+      - shippit:
+          requires:
+            - titleMu
+      - graph_loop:
+          requires:
+            - titleMu
+      - q3-smoke:
+          requires:
+            - graph_loop
+      - macro-star:
+          requires:
+            - graph_loop
+      - tb-old:
+          requires:
+            - macro-star
+      - j4:
+          requires:
+            - macro-star
+      - rollout:
+          requires:
+            - j4
+      - threads_list:
+          requires:
+            - j4
+      - perseus-rc:
+          requires:
+            - threads_list
+      - id35003:
+          requires:
+            - threads_list
+      - update-cache-hang:
+          requires:
+            - id35003
+      - connect_raw:
+          requires:
+            - id35003
+      - build-staging-docker-image:
+          requires:
+            - connect_raw
